@@ -1,59 +1,47 @@
-# Christmas Card Generator 🎄
+# Santa Photo Generator 🎅
 
-An AI-powered application that transforms your family photos into magical Christmas cards using state-of-the-art image generation models and adds festive messages.
+An AI-powered application that combines your family photos with generated Santa scenes to create magical Christmas portraits. The application uses Stable Diffusion to generate a high-quality Santa scene and seamlessly combines it with your uploaded photo.
 
 ## 🌟 Features
 
-- Transform regular photos into Christmas-themed scenes
-- Preserve original people and poses while adding festive backgrounds
-- Generate beautiful Christmas messages
-- High-quality image processing with depth awareness
-- Easy-to-use REST API interface
+- Generates a professional Santa scene with Christmas decorations
+- Preserves people from your original photo
+- Combines both images seamlessly
+- Places extracted people next to Santa
+- Adds proper lighting and shadows
+- High-quality image processing
 
 ## 🛠️ Technology Stack
 
-- **FastAPI**: Modern web framework for building APIs
-- **PyTorch**: Deep learning framework
-- **Diffusers**: Stable Diffusion and ControlNet implementation
-- **Transformers**: For depth estimation and text generation
-- **Pillow**: Image processing
+- **FastAPI**: Web framework for the API
+- **Stable Diffusion**: For generating Santa scenes
+- **SAM (Segment Anything Model)**: For precise person extraction
+- **PIL (Pillow)**: For image processing and composition
 - **CUDA**: GPU acceleration support
 
 ## 📋 Prerequisites
 
 - Python 3.10+
-- CUDA-capable GPU with at least 8GB VRAM
+- CUDA-capable GPU
+- 8GB+ VRAM recommended
 - 16GB+ RAM recommended
 
 ## 🔧 Installation
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/christmas-card-generator.git
-cd christmas-card-generator
-```
+1. Install required packages:
 
-2. Install dependencies:
 ```bash
-pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu117
-pip install transformers
+pip install torch torchvision
 pip install diffusers==0.21.4
+pip install transformers
 pip install accelerate
 pip install fastapi uvicorn python-multipart
 pip install pillow
-pip install transformers[torch]
-pip install opencv-python
-```
-
-3. Download required models (optional - will download automatically on first run):
-```bash
-huggingface-cli download lllyasviel/control_v11f1p_sd15_depth
-huggingface-cli download runwayml/stable-diffusion-v1-5
 ```
 
 ## 🚀 Usage
 
-### Running the Server
+### Starting the Server
 
 ```bash
 python main.py
@@ -61,11 +49,12 @@ python main.py
 
 The server will start on `http://localhost:8000`
 
-### API Endpoints
+### API Endpoint
 
-#### Create Christmas Card
+#### Process Image
+
 ```bash
-POST /create-christmas-card
+POST /process-image
 ```
 
 **Request:**
@@ -75,7 +64,7 @@ POST /create-christmas-card
 
 **Example using curl:**
 ```bash
-curl -X POST "http://localhost:8000/create-christmas-card" \
+curl -X POST "http://localhost:8000/process-image" \
      -H "accept: application/json" \
      -H "Content-Type: multipart/form-data" \
      -F "file=@family_photo.jpg"
@@ -84,61 +73,64 @@ curl -X POST "http://localhost:8000/create-christmas-card" \
 **Response:**
 ```json
 {
-    "message": "Christmas card created successfully",
-    "christmas_message": "Your festive message here",
+    "message": "Image processed successfully",
     "image_base64": "base64_encoded_image_data"
 }
 ```
 
-## 🎨 Customization
+## 🎨 Key Features
 
-### Modifying Christmas Messages
+### Santa Scene Generation
+- Professional studio-quality Santa scene
+- Warm lighting and Christmas decorations
+- Christmas tree and presents in background
+- Consistent high-quality output
 
-You can customize the Christmas messages by editing the `generate_christmas_message` method in the `ChristmasCardGenerator` class.
+### Person Extraction
+- Precise segmentation of people from original photos
+- Maintains original quality and details
+- Preserves family poses and expressions
 
-### Adjusting Image Generation
-
-The following parameters can be tuned in the `create_christmas_card` method:
-- `strength`: Controls the intensity of the transformation (0.0 to 1.0)
-- `guidance_scale`: Controls how closely the image follows the prompt
-- `num_inference_steps`: Controls the quality of the generation
-
-## 🔍 Technical Details
-
-The application uses:
-- ControlNet with depth awareness for maintaining spatial consistency
-- DDIM scheduler for stable image generation
-- GPU memory optimization techniques
-- Automatic image resizing for optimal processing
+### Image Composition
+- Seamless blending of extracted people with Santa scene
+- Professional positioning and scaling
+- Shadow effects for natural grounding
+- Color balance and enhancement
 
 ## ⚠️ Limitations
 
-- Maximum input image size is limited to 768px (automatically resized)
-- Processing time varies based on GPU capabilities
-- Requires significant GPU memory
+- Image generating is not perfect. Code base is in works.
+Input images should have clear subjects
+- Processing time depends on GPU capabilities
+- Requires specific versions of dependencies
+
+## 🔧 Configuration
+
+Key parameters in the image processing pipeline:
+
+```python
+# Santa generation parameters
+guidance_scale=8.0
+num_inference_steps=75
+width=1024
+height=1024
+
+# Image composition parameters
+target_height = int(h * 0.75)  # 75% of scene height
+```
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit issues and pull requests.
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- [Stable Diffusion](https://github.com/CompVis/stable-diffusion) for the base image generation
-- [ControlNet](https://github.com/lllyasviel/ControlNet) for improved image control
-- [Hugging Face](https://huggingface.co/) for model hosting and libraries
-
-## 📞 Support
-
-For issues and feature requests, please use the GitHub issue tracker.
+This project is licensed under the MIT License.
 
 ## 🔮 Future Improvements
 
-- [ ] Add more Christmas card templates
-- [ ] Implement batch processing
-- [ ] Add more customization options for text placement
-- [ ] Improve processing speed
-- [ ] Add more festive effects options
+- [ ] Add multiple Santa scene options
+- [ ] Improve blending algorithms
+- [ ] Add batch processing capability
+- [ ] Optimize processing speed
+- [ ] Add more customization options
